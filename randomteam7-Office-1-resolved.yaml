@@ -1,0 +1,268 @@
+---
+openapi: 3.0.0
+info:
+  title: OfficeApi
+  description: The API that can help to do reservation and allows to choose day and meeting room
+  contact:
+    name: Meltem KOC
+    email: 218se2142@isik.edu.tr
+  version: "1"
+servers:
+- url: https://virtserver.swaggerhub.com/randomteam7/Office/1
+  description: SwaggerHub API Auto Mocking
+paths:
+  /seats:
+    get:
+      tags:
+      - Seats
+      summary: List Capacity
+      operationId: ListTheCapacity
+      parameters:
+      - name: limit
+        in: query
+        description: Capacity of Whole Office (max 10)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Expected response to a valid request
+          headers:
+            x-next:
+              description: A link to the next page of response
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seat'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /updateSeats:
+    put:
+      tags:
+      - Seats
+      summary: Update created request for reserved seat
+      operationId: updateReservedSeat
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "201":
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /createReservation:
+    post:
+      tags:
+      - Seats
+      summary: Create request for reserving seat
+      operationId: reserveSeat
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "201":
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /deleteSeats:
+    delete:
+      tags:
+      - Seats
+      summary: Delete the reserved seat
+      operationId: deleteSeat
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "201":
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /room:
+    get:
+      tags:
+      - Rooms
+      summary: List rooms
+      operationId: List the meeting rooms
+      parameters:
+      - name: limit
+        in: query
+        description: How many items to return at one time (max 2)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "200":
+          description: Expected response to a valid request
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seat'
+        "201":
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - Rooms
+      summary: Update created request for reserved room
+      operationId: UpdateReservedRoom
+      responses:
+        "200":
+          description: Expected response to a valid request
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seat'
+        "201":
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Rooms
+      summary: Create reserve request for room
+      operationId: CreateRoomRequest
+      responses:
+        "200":
+          description: Expected response to a valid request
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              style: simple
+              explode: false
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seat'
+        "201":
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - Rooms
+      summary: Delete the reserved room
+      operationId: DeleteRoomReservation
+      responses:
+        "204":
+          description: Delete  room reservation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /seats/{id}:
+    get:
+      tags:
+      - RoomSeats
+      summary: Get office remaining seat/meeting room capacity
+      operationId: RemainingCapacity
+      parameters:
+      - name: id
+        in: path
+        description: Returns a user based on a single ID, if the user does not have access to do reservation
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Seat'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Seat:
+      required:
+      - id
+      - num
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        tag:
+          type: string
+    Error:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
